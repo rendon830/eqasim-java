@@ -1,0 +1,11 @@
+2022-06-23T17:39:06,486  WARN PrepareForSimImpl:222 'usePersonIdForMissingVehicleId' is deprecated. It will be removed soon.
+2022-06-23T17:39:22,900  WARN CharyparNagelActivityScoring:246 The first and the last activity do not have the same type. 
+2022-06-23T17:39:22,901  WARN CharyparNagelActivityScoring:247 Will score the first activity from midnight to its end, and the last activity from its start to midnight.
+2022-06-23T17:39:22,901  WARN CharyparNagelActivityScoring:248 Because of the nonlinear function, this is not the same as scoring from start to end.
+2022-06-23T17:39:22,909  WARN CharyparNagelActivityScoring:249 first activity: act [type=home][coord=null][linkId=3857][startTime=undefined][endTime=14:51:25][duration=undefined][facilityId=home_45218]
+2022-06-23T17:39:22,910  WARN CharyparNagelActivityScoring:250 last activity: act [type=other][coord=[x=1176480.02 | y=6109107.29]][linkId=24116][startTime=14:53:03][endTime=undefined][duration=undefined][facilityId=sec_1162]
+2022-06-23T17:39:22,910  WARN CharyparNagelActivityScoring:251 This may also happen when plans are not completed when the simulation ends.
+2022-06-23T17:39:22,910  WARN CharyparNagelActivityScoring:253 Additional warnings of this type are suppressed.
+2022-06-23T17:52:47,665  WARN PlansCalcRouteConfigGroup:342 The first mode routing params that are explicitly defined clear the default mode routing params.  This functionality was removed for 
+2022-06-23T17:52:47,665  WARN PlansCalcRouteConfigGroup:343     some weeks in the development head, after release 11.x, and before release 12.x; it is now back.  If you want to avoid this 
+2022-06-23T17:52:47,665  WARN PlansCalcRouteConfigGroup:344     warning, use clearModeRoutingParams(true) in code, and "clearDefaultTeleportedModeParams"=true in xml config.

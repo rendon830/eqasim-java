@@ -1,0 +1,44 @@
+pattern	0+	5+	10+	15+	20+	25+	30+	35+	40+	45+	50+	55+	60+
+education---other	36	62	34	20	11	11	9	4	0	3	3	1	6
+home---education	64	48	28	13	7	8	5	2	3	3	4	5	10
+home---leisure	600	222	111	53	26	19	20	11	19	44	62	14	16
+home---other	231	199	167	69	59	38	23	8	16	6	12	0	18
+home---pt interaction	5	13	7	7	2	10	5	4	2	2	3	0	12
+home---sharing booking interaction	4	0	0	0	0	0	0	0	0	0	0	0	0
+home---shop	184	135	71	36	24	18	10	7	6	6	3	1	31
+home---work	274	469	260	124	95	53	58	30	47	26	8	12	97
+leisure---home	607	263	126	55	28	23	22	15	18	43	62	14	16
+leisure---leisure	2	3	1	0	0	0	1	0	0	1	0	0	0
+leisure---pt interaction	1	1	0	0	1	0	0	0	0	1	0	1	0
+leisure---sharing booking interaction	2	0	0	0	0	0	0	0	0	0	0	0	0
+leisure---work	127	116	54	29	19	11	5	7	3	2	3	2	5
+other---home	166	265	180	101	68	49	33	23	16	6	8	6	24
+other---leisure	48	63	41	28	12	8	3	2	2	0	1	0	4
+other---other	68	96	71	35	25	19	13	7	5	1	0	0	7
+other---pt interaction	1	0	1	0	0	1	1	1	0	2	1	1	0
+other---sharing booking interaction	2	0	0	0	0	0	0	0	0	0	0	0	0
+other---shop	52	50	27	17	11	3	7	1	1	0	1	1	2
+other---work	5	7	10	7	2	0	2	0	1	1	0	0	3
+pt interaction---home	3	9	8	6	3	6	2	4	2	1	2	1	8
+pt interaction---leisure	0	0	2	0	0	0	1	1	0	0	0	0	1
+pt interaction---other	1	3	1	0	0	0	0	1	1	1	0	1	2
+pt interaction---pt interaction	26	7	10	12	9	10	4	9	10	7	5	6	80
+pt interaction---shop	1	1	0	0	0	3	0	0	0	0	0	0	0
+pt interaction---work	17	18	21	5	5	2	0	1	0	1	0	0	1
+sharing booking interaction---sharing pickup interaction	8	0	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---home	2	0	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---leisure	1	0	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---other	2	1	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---work	2	0	0	0	0	0	0	0	0	0	0	0	0
+sharing pickup interaction---sharing dropoff interaction	1	4	1	2	0	0	0	0	0	0	0	0	0
+shop---home	162	126	54	27	18	14	9	8	5	4	3	1	27
+shop---leisure	17	26	9	9	3	5	0	1	2	0	0	1	0
+shop---pt interaction	1	1	1	0	4	0	0	0	0	0	0	0	0
+shop---work	54	64	22	10	6	7	3	1	2	1	2	0	0
+work---home	251	500	278	129	93	58	50	46	34	36	8	9	113
+work---leisure	63	55	23	6	7	4	3	4	1	0	3	1	4
+work---other	63	108	71	46	34	25	9	12	2	3	4	0	4
+work---pt interaction	8	16	16	6	5	1	0	0	0	3	0	0	0
+work---sharing booking interaction	3	0	0	0	0	0	0	0	0	0	0	0	0
+
+average trip duration: 1050.3116287277219 seconds = 00:17:30

@@ -1,0 +1,57 @@
+pattern	0+	5+	10+	15+	20+	25+	30+	35+	40+	45+	50+	55+	60+
+PTSharing interaction---sharing booking interaction	158	0	0	0	0	0	0	0	0	0	0	0	0
+SharingPT interaction---home	0	0	0	0	1	0	0	0	0	0	0	0	2
+SharingPT interaction---pt interaction	8	0	2	0	0	0	0	0	0	0	0	0	0
+education---other	30	63	34	23	12	10	8	6	1	3	3	0	7
+home---PTSharing interaction	0	0	0	0	1	0	2	3	4	4	2	0	40
+home---education	54	57	27	12	6	11	4	3	3	2	5	2	14
+home---leisure	569	206	125	42	14	18	14	6	13	21	24	7	22
+home---other	190	184	147	66	56	28	20	4	12	8	10	3	41
+home---pt interaction	12	26	29	12	9	10	9	12	7	2	5	4	27
+home---sharing booking interaction	174	0	0	0	0	0	0	0	0	0	0	0	0
+home---shop	167	114	76	37	28	16	10	6	4	6	4	2	29
+home---work	213	437	211	106	75	31	31	25	21	15	10	9	124
+leisure---PTSharing interaction	0	0	0	0	0	0	1	1	2	0	0	0	7
+leisure---home	568	241	130	36	26	17	17	9	7	21	24	9	22
+leisure---leisure	2	1	1	0	0	0	1	0	0	1	0	0	0
+leisure---pt interaction	1	3	4	1	0	0	3	1	1	0	0	0	2
+leisure---sharing booking interaction	44	0	0	0	0	0	0	0	0	0	0	0	0
+leisure---work	83	88	42	27	14	6	5	5	1	1	1	1	19
+other---PTSharing interaction	0	0	0	0	1	0	0	0	4	0	0	1	13
+other---home	121	234	160	72	53	37	21	11	12	8	12	6	44
+other---leisure	33	52	34	22	8	1	3	1	3	4	1	0	16
+other---other	49	77	55	24	16	10	9	4	3	1	2	1	14
+other---pt interaction	4	6	5	1	6	2	1	1	3	1	3	1	4
+other---sharing booking interaction	51	0	0	0	0	0	0	0	0	0	0	0	0
+other---shop	38	42	27	11	6	4	6	1	0	0	1	1	2
+other---work	3	10	6	3	1	0	1	0	4	0	0	0	5
+pt interaction---PTSharing interaction	35	1	6	0	0	0	0	0	0	0	0	0	0
+pt interaction---home	5	18	11	9	4	6	3	4	4	2	3	2	16
+pt interaction---leisure	1	5	2	2	0	0	2	1	0	0	0	0	3
+pt interaction---other	2	3	9	3	1	3	3	3	1	3	1	0	5
+pt interaction---pt interaction	38	14	19	30	23	27	15	20	17	14	13	15	152
+pt interaction---shop	5	4	2	0	0	1	0	1	1	0	0	0	1
+pt interaction---work	21	31	45	12	12	2	2	2	0	5	0	0	4
+sharing booking interaction---sharing pickup interaction	148	18	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---SharingPT interaction	13	0	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---home	54	1	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---leisure	19	0	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---other	23	1	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---shop	6	0	0	0	0	0	0	0	0	0	0	0	0
+sharing dropoff interaction---work	48	0	0	0	0	0	0	0	0	0	0	0	0
+sharing pickup interaction---sharing dropoff interaction	49	45	32	14	12	2	3	0	0	3	2	0	3
+sharing pickup interaction---sharing pickup interaction	1	0	0	0	0	0	0	0	0	0	0	0	0
+shop---PTSharing interaction	0	0	0	0	2	0	0	0	0	0	0	0	3
+shop---home	140	116	55	27	19	8	8	8	2	4	5	0	22
+shop---leisure	15	22	11	8	2	2	1	1	2	0	1	0	2
+shop---pt interaction	3	4	3	2	2	2	0	0	1	0	0	1	0
+shop---sharing booking interaction	20	0	0	0	0	0	0	0	0	0	0	0	0
+shop---work	32	53	16	11	4	4	3	1	2	1	3	0	5
+work---PTSharing interaction	0	0	0	0	0	1	0	0	0	0	0	1	23
+work---home	197	419	220	127	81	34	25	28	16	24	7	6	120
+work---leisure	39	43	21	5	6	3	1	4	0	1	2	0	6
+work---other	39	76	48	36	25	19	4	2	1	4	5	0	20
+work---pt interaction	17	19	33	5	8	2	0	1	0	3	0	0	0
+work---sharing booking interaction	102	0	0	0	0	0	0	0	0	0	0	0	0
+
+average trip duration: 1435.7879105520615 seconds = 00:23:55
