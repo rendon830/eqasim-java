@@ -1,9 +1,10 @@
-package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice;
+package org.eqasim.examples.SMMFramework;
 
 import com.google.common.io.Resources;
 import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
+import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.MicromobilityUtils;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.matsim.api.core.v01.Scenario;
