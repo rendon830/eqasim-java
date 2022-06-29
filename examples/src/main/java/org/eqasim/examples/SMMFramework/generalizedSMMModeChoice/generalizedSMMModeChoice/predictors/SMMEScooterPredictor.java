@@ -3,7 +3,7 @@ package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMM
 import org.eqasim.core.simulation.mode_choice.utilities.predictors.CachedVariablePredictor;
 import org.eqasim.core.simulation.mode_choice.utilities.predictors.PredictorUtils;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMEScooterCostModel;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussEScooterVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMEScooterVariables;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -12,7 +12,7 @@ import org.matsim.contribs.discrete_mode_choice.model.DiscreteModeChoiceTrip;
 
 import java.util.List;
 
-public class SMMEScooterPredictor extends CachedVariablePredictor<KraussEScooterVariables> {
+public class SMMEScooterPredictor extends CachedVariablePredictor<SMMEScooterVariables> {
     private SMMEScooterCostModel costModel;
     String name;
     double sharedEscooterSpeed = 4;// Proxy of 22kph
@@ -28,7 +28,7 @@ public class SMMEScooterPredictor extends CachedVariablePredictor<KraussEScooter
         this.name=name;
     }
     @Override
-    public KraussEScooterVariables predict(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
+    public SMMEScooterVariables predict(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
 
         int numberOfVehicularTrips = 0;
         boolean isFirstWaitingTime = true;
@@ -84,6 +84,6 @@ public class SMMEScooterPredictor extends CachedVariablePredictor<KraussEScooter
 
         double euclideanDistance_km = PredictorUtils.calculateEuclideanDistance_km(trip);
         cost_MU=costModel.calculateCost_MU(person,trip,elements);
-        return new KraussEScooterVariables(travelTime_min,accessTime_min,egressTime_min,0,0,0,0,cost_MU);
+        return new SMMEScooterVariables(travelTime_min,accessTime_min,egressTime_min,0,0,0,0,cost_MU);
     }
 }

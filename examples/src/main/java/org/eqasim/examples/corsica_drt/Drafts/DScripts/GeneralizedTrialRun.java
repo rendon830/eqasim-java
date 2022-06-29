@@ -3,7 +3,7 @@ package org.eqasim.examples.corsica_drt.Drafts.DScripts;
 import com.google.common.io.Resources;
 import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 import org.eqasim.examples.corsica_drt.Drafts.DGeneralizedMultimodal.sharingPt.SharingPTModule;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.eqasim.ile_de_france.mode_choice.IDFModeChoiceModule;
@@ -209,7 +209,7 @@ public class GeneralizedTrialRun {
 		//controller.addOverridingModule(new EqasimAnalysisModule());
 		controller.addOverridingModule(new EqasimModeChoiceModule());
 		controller.addOverridingModule(new IDFModeChoiceModule(cmd));
-		controller.addOverridingModule(new ModeChoiceModuleExample(cmd,scenario));
+		controller.addOverridingModule(new SMMBaseModeChoice(cmd,scenario));
 		controller.addOverridingModule(new SharingPTModule(scenario));
 
      	//controller.addOverridingModule(new MultiModalModule());

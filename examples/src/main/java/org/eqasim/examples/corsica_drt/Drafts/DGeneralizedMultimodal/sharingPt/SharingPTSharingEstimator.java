@@ -2,8 +2,8 @@ package org.eqasim.examples.corsica_drt.Drafts.DGeneralizedMultimodal.sharingPt;
 
 import com.google.inject.Inject;
 import org.eqasim.core.simulation.mode_choice.utilities.UtilityEstimator;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussPersonPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussEqasimPersonVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.SMMPersonPredictor;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMEqasimPersonVariables;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMParameters;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SharingPTVariables;
 import org.matsim.api.core.v01.population.Person;
@@ -30,8 +30,8 @@ public class SharingPTSharingEstimator implements UtilityEstimator {
 
     }
     protected double estimatePersonalUtilityPT(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements){
-        KraussPersonPredictor personPredictor=new KraussPersonPredictor();
-        KraussEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
+        SMMPersonPredictor personPredictor=new SMMPersonPredictor();
+        SMMEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
         double ageU=personVariables.age_a*parameters.pt.betaAge;
         double bikeAcc=personVariables.getBikeAcc()*parameters.pt.betaBikeAcc;
         double pTAcc=personVariables.getPtPass()*parameters.pt.betaPTPass;
@@ -39,8 +39,8 @@ public class SharingPTSharingEstimator implements UtilityEstimator {
         return(ageU+bikeAcc+pTAcc+carAcc);
     }
     protected double estimatePersonalUtilitySharing(Person person, DiscreteModeChoiceTrip trip,List<? extends PlanElement> elements){
-        KraussPersonPredictor personPredictor=new KraussPersonPredictor();
-        KraussEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
+        SMMPersonPredictor personPredictor=new SMMPersonPredictor();
+        SMMEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
         double ageU=personVariables.age_a*parameters.bikeShare.betaAge;
         double bikeAcc=personVariables.getBikeAcc()*parameters.bikeShare.betaBikeAcc;
         double carAcc=personVariables.getCarAccessibility()*parameters.bikeShare.betaCarAcc;

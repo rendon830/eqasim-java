@@ -3,9 +3,9 @@ package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMM
 import com.google.inject.Inject;
 import org.eqasim.core.simulation.mode_choice.utilities.UtilityEstimator;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.predictors.SMMBikeSharePredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussPersonPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussBikeShareVariables;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussEqasimPersonVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.SMMPersonPredictor;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMBikeShareVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMEqasimPersonVariables;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMParameters;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -18,13 +18,13 @@ public class SMMBikeShareEstimator implements UtilityEstimator {
     private final SMMBikeSharePredictor predictor;
 
     @Inject
-    public SMMBikeShareEstimator(SMMParameters parameters, SMMBikeSharePredictor predictor, KraussPersonPredictor personPredictor) {
+    public SMMBikeShareEstimator(SMMParameters parameters, SMMBikeSharePredictor predictor, SMMPersonPredictor personPredictor) {
         this.parameters = parameters;
         this.predictor = predictor;
 
     }
 
-    public SMMBikeShareEstimator(SMMParameters parameters, SMMBikeSharePredictor predictor, KraussPersonPredictor personPredictor, String name) {
+    public SMMBikeShareEstimator(SMMParameters parameters, SMMBikeSharePredictor predictor, SMMPersonPredictor personPredictor, String name) {
         this.parameters = parameters;
         this.predictor = predictor;
 
@@ -34,8 +34,8 @@ public class SMMBikeShareEstimator implements UtilityEstimator {
         return parameters.bikeShare.alpha_u;
     }
     protected double estimatePersonalUtility(Person person, DiscreteModeChoiceTrip trip,List<? extends PlanElement> elements){
-        KraussPersonPredictor personPredictor=new KraussPersonPredictor();
-        KraussEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
+        SMMPersonPredictor personPredictor=new SMMPersonPredictor();
+        SMMEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
         double ageU=personVariables.age_a*parameters.bikeShare.betaAge;
         double bikeAcc=personVariables.getBikeAcc()*parameters.bikeShare.betaBikeAcc;
         double carAcc=personVariables.getCarAccessibility()*parameters.bikeShare.betaCarAcc;
@@ -43,36 +43,36 @@ public class SMMBikeShareEstimator implements UtilityEstimator {
 
         return(ageU+bikeAcc+carAcc+pTAcc);
     }
-    protected double estimateTravelTimeUtility(KraussBikeShareVariables variables) {
+    protected double estimateTravelTimeUtility(SMMBikeShareVariables variables) {
         return parameters.bikeShare.betaTravelTime_u_min * variables.travelTime_u_min;
     }
 
-    protected double estimateAccessTimeUtility(KraussBikeShareVariables variables) {
+    protected double estimateAccessTimeUtility(SMMBikeShareVariables variables) {
         return parameters.bikeShare.betaAccess_Time * variables.access_Time;
     }
 
-    protected double estimateMonetaryCostUtility(KraussBikeShareVariables variables) {
+    protected double estimateMonetaryCostUtility(SMMBikeShareVariables variables) {
         double coeff=-Math.exp( parameters.betaCost_u_MU);
         double utility=-Math.exp( parameters.betaCost_u_MU) * variables.cost;
         return utility;
 
     }
 
-    protected double estimateEgressTimeUtility(KraussBikeShareVariables variables) {
+    protected double estimateEgressTimeUtility(SMMBikeShareVariables variables) {
         return parameters.bikeShare.betaEgress_Time* variables.egress_Time;
     }
 
-    protected double estimateParkingTimeUtility(KraussBikeShareVariables variables){
+    protected double estimateParkingTimeUtility(SMMBikeShareVariables variables){
         return parameters.bikeShare.betaParkingTime_u_min*variables.parkingTime_u_min;
     }
-    protected double estimatePedelecUtility(KraussBikeShareVariables variables){
+    protected double estimatePedelecUtility(SMMBikeShareVariables variables){
         return parameters.bikeShare.betaPedelec*variables.pedelec;
     }
 
 
     @Override
     public double estimateUtility(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
-        KraussBikeShareVariables variables = predictor.predict(person, trip, elements);
+        SMMBikeShareVariables variables = predictor.predict(person, trip, elements);
 
         double utility = 0.0;
 

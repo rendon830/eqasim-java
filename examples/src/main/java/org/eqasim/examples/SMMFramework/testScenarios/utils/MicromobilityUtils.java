@@ -6,7 +6,7 @@ import org.eqasim.examples.SMMFramework.GBFSUtils.ReadFreeFloatingGBFS;
 import org.eqasim.examples.SMMFramework.GBFSUtils.ReadStationBasedGBFS;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMultimodalRoutingSMM.SMMSharingPTModule;
 import org.eqasim.examples.corsica_drt.Drafts.DScripts.MicroMobilityModeEqasimModeChoiceModule;
-import org.eqasim.examples.corsica_drt.Drafts.DScripts.MicromobilityWIthMapModule;
+import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.SMMEqasimModule;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.contrib.sharing.run.SharingConfigGroup;
@@ -23,6 +23,10 @@ import org.matsim.core.controler.Controler;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Class provides the utilities for  installinng SMM modes in MATSim
+ */
+
 public class MicromobilityUtils implements ParameterDefinition {
 
     public String mode;
@@ -30,21 +34,26 @@ public class MicromobilityUtils implements ParameterDefinition {
     public String serviceArea=null;
     public Double accessDist;
 
-    public static void main(String[] args) throws IllegalAccessException {
-//        addSharingService(ConfigUtils.loadConfig("C:\\Users\\juan_\\Desktop\\TUM\\Semester5\\Thesis\\eqasimMicromobility\\examples\\src\\main\\java\\org\\eqasim\\examples\\corsica_drt\\siouxfalls\\config.xml"),"Shared-Bike","Station Based",10000.0,null,null,null);
-//        addSharingService(ConfigUtils.loadConfig("C:\\Users\\juan_\\Desktop\\TUM\\Semester5\\Thesis\\eqasimMicromobility\\examples\\src\\main\\java\\org\\eqasim\\examples\\corsica_drt\\siouxfalls\\config.xml"),"eScooter","None",10000.0,null,null,null);
-    }
+    /**
+     * Master method of the class; recieves commandLine arguments and configures all services into the config and controller
+     * @param cmd commandLine arguments
+     * @param controller controller
+     * @param config config MATSim
+     * @param scenario Scenario matsin´m
+     * @throws IllegalAccessException
+     */
     public static void  addSharingServices(CommandLine cmd,Controler controller, Config config,Scenario scenario) throws IllegalAccessException {
         HashMap<String,HashMap<String,String>> sharingServicesInput=applyCommandLineServices("sharing-mode-name",cmd);
+        //  Creates the Services in a HashMap
         try {
             generateServiceFile(sharingServicesInput,config,scenario);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        // Iterates through Services Map
         for( String key :sharingServicesInput.keySet()) {
             HashMap<String,String>service=sharingServicesInput.get(key);
-
-//            "Service_File", "Mode", "Scheme","Service_Name","Intermodal","AccessEgress_Distance"
+            // Temporal specification of service
                 String serviceFile=service.get("Service_File");
                 String mode=service.get("Mode");
                 String name=service.get("Service_Name");
@@ -52,62 +61,55 @@ public class MicromobilityUtils implements ParameterDefinition {
                 String scheme=service.get("Scheme");
                 String multimodal=service.get("Multimodal");
                 String serviceArea="";
+
                 if(service.keySet().contains("Service_Area")){
                     serviceArea=service.get("Service_Area");
                 }
+                // Adds SMM sharing service to the Config
                 addSharingService(controller,config,mode,scheme,accessEgress,serviceArea,serviceFile,name,multimodal);
+                // Adds SMM sharing service to Eqasim mode choice
                 addSharingServiceToEqasim(controller,config,cmd,scenario,service);
+                // Adds Eqasim+ SMM multimodal
                 if(multimodal.equals("Yes")){
                     controller.addOverridingModule(new SMMSharingPTModule(scenario,name));
                 }
         }
+        // Adds the Sharing Contrib
         controller.addOverridingModule(new SharingModule());
+        // Sets Sharing Contrib simulation
         controller.configureQSimComponents(SharingUtils.configureQSim((SharingConfigGroup) config.getModules().get("sharing")));
 
     }
 
 
-    public static void  addSharingServicesCharyParNagel(CommandLine cmd,Controler controller, Config config,Scenario scenario) throws IllegalAccessException {
-        HashMap<String,HashMap<String,String>> sharingServicesInput=applyCommandLineServices("sharing-mode-name",cmd);
-        try {
-            generateServiceFile(sharingServicesInput,config,scenario);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for( String key :sharingServicesInput.keySet()) {
-            HashMap<String,String>service=sharingServicesInput.get(key);
+    /**
+     * Master method that links the sharing service specifiction into Eqasim, MATSim and Eqasim+SMM
+     * @param controller MATsim controller
+     * @param config MATSim config
+     * @param mode routing  mode
+     * @param serviceScheme service scheme of mode
+     * @param accessDist access/ egress distance to mode
+     * @param serviceArea Service area shp file
+     * @param serviceFile Service files( created from GBFS)
+     * @param name     name of the service
+     * @param multimodal  is connector to PT?
+     * @throws IllegalAccessException
+     */
 
-//            "Service_File", "Mode", "Scheme","Service_Name","Intermodal","AccessEgress_Distance"
-            String serviceFile=service.get("Service_File");
-            String mode=service.get("Mode");
-            String name=service.get("Service_Name");
-            Double accessEgress=Double.parseDouble(service.get("AccessEgress_Distance"));
-            String scheme=service.get("Scheme");
-            String multimodal=service.get("Multimodal");
-            String serviceArea="";
-            if(service.keySet().contains("Service_Area")){
-                serviceArea=service.get("Service_Area");
-            }
-            addSharingService(controller,config,mode,scheme,accessEgress,serviceArea,serviceFile,name,multimodal);
-//
-        }
-        controller.addOverridingModule(new SharingModule());
-        controller.configureQSimComponents(SharingUtils.configureQSim((SharingConfigGroup) config.getModules().get("sharing")));
-
-    }
     public static void addSharingService(Controler controller, Config config, String mode, String serviceScheme, Double accessDist, String serviceArea, String serviceFile, String name, String multimodal) throws IllegalAccessException {
 
-
+        // creates the Sharing contrib config
         SharingConfigGroup sharingConfigGroup = (SharingConfigGroup) config.getModules().get("sharing");
         if (sharingConfigGroup == null) {
             sharingConfigGroup = new SharingConfigGroup();
             config.addModule(sharingConfigGroup);
         }
+        // Creates the routing parameters of SMM modes
         Map<String, PlansCalcRouteConfigGroup.ModeRoutingParams> routingParams = config.plansCalcRoute().getModeRoutingParams();
         if(routingParams.containsKey("Shared-Bike")== false && routingParams.containsKey("eScooter")==false) {
             addSharedModes(config);
         }
-        // Save for super method
+        // Verify that the service has the right service type and routing type
         String serviceSchemes[] = new String[]{"Station-Based", "Free-floating"};
         String possibleModes[] = new String[]{"Shared-Bike", "eScooter"};
         boolean contains = Arrays.stream(possibleModes).anyMatch(mode::equals);
@@ -121,23 +123,17 @@ public class MicromobilityUtils implements ParameterDefinition {
                 {
                     throw new IllegalArgumentException(" The service scheme is invalid; please insert Station Based or Free-floating");
                 }
+                // if the values re correct, configures it into Sharing contrib config and base MATSin
             } else {
                 if (serviceScheme.equals("Station-Based")) {
                     addSharedStationBasedService(config, sharingConfigGroup, accessDist, name, mode, serviceFile);
                 } else if (serviceScheme.equals("Free-floating")) {
                     addSharedFreeFloatingService(config, sharingConfigGroup, serviceArea, accessDist, name, mode, serviceFile);
                 }
-//                if(multimodal.equals("Yes")){
-//                    List<String> modes = new ArrayList<>(Arrays.asList(config.subtourModeChoice().getModes()));
-//                    if(modes.contains(SharingUtils.getServiceMode(serviceConfig))) {
-//                        modes.add(SharingUtils.getServiceMode(serviceConfig));
-//                    }
-//                    config.subtourModeChoice().setModes(modes.toArray(new String[modes.size()]));
-//
-//                }
             }
         }
-        // We need to add interaction activity types to scoring
+
+        // Scores Sharing contrib Activities
         PlanCalcScoreConfigGroup.ActivityParams pickupParams = new PlanCalcScoreConfigGroup.ActivityParams(SharingUtils.PICKUP_ACTIVITY);
         pickupParams.setScoringThisActivityAtAll(false);
         config.planCalcScore().addActivityParams(pickupParams);
@@ -150,7 +146,6 @@ public class MicromobilityUtils implements ParameterDefinition {
         bookingParams.setScoringThisActivityAtAll(false);
         config.planCalcScore().addActivityParams(bookingParams);
 
-       // return sharingConfigGroup;
 
     }
 
@@ -159,7 +154,9 @@ public class MicromobilityUtils implements ParameterDefinition {
 
 
 
-    // Method adds the routing parameters for Shared Bike mode & eScooter ( Based on speeds from Hamad et al ,2020)
+    /**
+    / Method adds the routing parameters for Shared Bike mode & eScooter ( Based on speeds from Hamad et al ,2020)
+     **/
     public static void addSharedModes(Config config){
         PlansCalcRouteConfigGroup.ModeRoutingParams bikeRoutingParams = new PlansCalcRouteConfigGroup.ModeRoutingParams("Shared-Bike");
         bikeRoutingParams.setTeleportedModeSpeed(3.44);
@@ -173,11 +170,6 @@ public class MicromobilityUtils implements ParameterDefinition {
         config.plansCalcRoute().addModeRoutingParams(eScooterRoutingParams);
 
 
-//        PlansCalcRouteConfigGroup.ModeRoutingParams walkRoutingParams = new PlansCalcRouteConfigGroup.ModeRoutingParams("walk");
-//        walkRoutingParams.setTeleportedModeSpeed(2.0);
-//        walkRoutingParams.setBeelineDistanceFactor(1.3);
-//        config.plansCalcRoute().addModeRoutingParams(walkRoutingParams);
-
         // We need to score bike
         PlanCalcScoreConfigGroup.ModeParams bikeScoringParams = new PlanCalcScoreConfigGroup.ModeParams("Shared-Bike");
         config.planCalcScore().addModeParams(bikeScoringParams);
@@ -186,28 +178,35 @@ public class MicromobilityUtils implements ParameterDefinition {
 
     }
 
+    /**
+     * Adds  the SMM service as  free floating service in the sharing contrib
+     * @param config MATSIm config
+     * @param configGroup Sharing Contrib config
+     * @param serviceArea Service area shp file
+     * @param accessDistance  access/ egress distance to mode
+     * @param name name of the service
+     * @param mode routing  mode
+     * @param serviceFile Service files( created from GBFS)
 
+     */
     public static void addSharedFreeFloatingService(Config config,SharingConfigGroup configGroup, String serviceArea,Double accessDistance, String name, String mode,String serviceFile) {
 
         SharingServiceConfigGroup serviceConfig = new SharingServiceConfigGroup();
         configGroup.addService(serviceConfig);
 
-        // ... with a service id. The respective mode will be "sharing:velib".
+        // Sets id of service
         serviceConfig.setId(name);
 
-        // ... with freefloating characteristics
+        // Sets  freefloating characteristics
         serviceConfig.setMaximumAccessEgressDistance(accessDistance);
         serviceConfig.setServiceScheme(SharingServiceConfigGroup.ServiceScheme.Freefloating);
         serviceConfig.setServiceAreaShapeFile(serviceArea);
         serviceConfig.setServiceInputFile(serviceFile);
 
-        // Save for super method
-        //String array[] =new String[]{"Station Based", "Free Floating" };
-
-        //boolean contains = Arrays.stream(array).anyMatch(serviceScheme::equals);
 
 
-        // ... and, we need to define the underlying mode, here "bike".
+
+        // Set the routing mode
         serviceConfig.setMode(mode);
 
         // considered in mode choice.
@@ -215,46 +214,29 @@ public class MicromobilityUtils implements ParameterDefinition {
         modes.add(SharingUtils.getServiceMode(serviceConfig));
         config.subtourModeChoice().setModes(modes.toArray(new String[modes.size()]));
     }
-    public static void addSharedFreeFloatingService(Config config,SharingConfigGroup configGroup,HashMap<String,String>service) {
 
-        SharingServiceConfigGroup serviceConfig = new SharingServiceConfigGroup();
-        configGroup.addService(serviceConfig);
-
-        // ... with a service id. The respective mode will be "sharing:velib".
-        serviceConfig.setId(service.get("Name"));
-
-        // ... with freefloating characteristics
-        serviceConfig.setMaximumAccessEgressDistance(Double.parseDouble(service.get("AccessEgress_Distance")));
-        serviceConfig.setServiceScheme(SharingServiceConfigGroup.ServiceScheme.Freefloating);
-        if(service.keySet().contains("Service_Area")) {
-            serviceConfig.setServiceAreaShapeFile(service.get("Service_Area"));
-        }
-
-        serviceConfig.setServiceInputFile(service.get("Service_File"));
-
-        // ... and, we need to define the underlying mode, here "bike".
-        serviceConfig.setMode(service.get("Mode"));
-
-        // considered in mode choice.
-        List<String> modes = new ArrayList<>(Arrays.asList(config.subtourModeChoice().getModes()));
-        if(modes.contains(SharingUtils.getServiceMode(serviceConfig))) {
-            modes.add(SharingUtils.getServiceMode(serviceConfig));
-        }
-        config.subtourModeChoice().setModes(modes.toArray(new String[modes.size()]));
-    }
+    /**
+     *  Adds a service  to the Shairng contrib as station based
+     *@param config MATSIm config
+     * @param configGroup Sharing Contrib config
+     * @param accessDistance  access/ egress distance to mode
+     * @param name name of the service
+     * @param mode routing  mode
+     * @param serviceFile Service files( created from GBFS)
+     */
     public static void addSharedStationBasedService(Config config, SharingConfigGroup configGroup, Double accessDistance, String name, String mode, String serviceFile) {
 
         SharingServiceConfigGroup serviceConfig = new SharingServiceConfigGroup();
         configGroup.addService(serviceConfig);
 
-        // ... with a service id. The respective mode will be "sharing:velib".
+        // Sets id of service
         serviceConfig.setId(name);
 
-        // ... with freefloating characteristics
+        // Sets as Station based
         serviceConfig.setMaximumAccessEgressDistance(accessDistance);
         serviceConfig.setServiceScheme(SharingServiceConfigGroup.ServiceScheme.StationBased);
         serviceConfig.setServiceInputFile(serviceFile);
-
+        // Sets routing mode
         serviceConfig.setMode(mode);
 
         // considered in mode choice.
@@ -262,29 +244,8 @@ public class MicromobilityUtils implements ParameterDefinition {
         modes.add(SharingUtils.getServiceMode(serviceConfig));
         config.subtourModeChoice().setModes(modes.toArray(new String[modes.size()]));
     }
-//    public static void addSharedStationBasedService(Config config, SharingConfigGroup configGroup, HashMap<String,String>service) {
 //
-//        SharingServiceConfigGroup serviceConfig = new SharingServiceConfigGroup();
-//        configGroup.addService(serviceConfig);
-//
-//        // ... with a service id. The respective mode will be "sharing:velib".
-//        serviceConfig.setId(service.get("Name"));
-//
-//        // ... with freefloating characteristics
-//        serviceConfig.setMaximumAccessEgressDistance(Double.parseDouble(service.get("AccessEgress_Distance")));
-//        serviceConfig.setServiceScheme(SharingServiceConfigGroup.ServiceScheme.StationBased);
-//        serviceConfig.setServiceInputFile(service.get("Service_File"));
-//
-//        serviceConfig.setMode(service.get("Mode"));
-//
-//        // considered in mode choice.
-//        List<String> modes = new ArrayList<>(Arrays.asList(config.subtourModeChoice().getModes()));
-//        if(modes.contains(SharingUtils.getServiceMode(serviceConfig))) {
-//            modes.add(SharingUtils.getServiceMode(serviceConfig));
-//        }
-//        config.subtourModeChoice().setModes(modes.toArray(new String[modes.size()]));
-//    }
-    // Name must be as sharing:bikeShare !!
+
     public static void addSharingServiceToEqasim(Controler controller,Config config, CommandLine cmd, Scenario scenario,String name,String serviceFile){
         EqasimConfigGroup eqasimConfig = EqasimConfigGroup.get(config);
 // Scoring config definition to add the mode cat_pt parameters
@@ -395,8 +356,8 @@ public class MicromobilityUtils implements ParameterDefinition {
 //        eqasimConfig.setEstimator("PT_bikeShare","PT_bikeShare");
         dmcConfig.setModeAvailability(service.get("Service_Name")+"ModeAvailability");
 
-        controller.addOverridingModule(new MicromobilityWIthMapModule(cmd,scenario,service));
-        //controller.addOverridingModule(new MicroMobilityModeEqasimModeChoiceModule(cmd,scenario,name,serviceFile));
+        controller.addOverridingModule(new SMMEqasimModule(cmd,scenario,service));
+
 
 
     }
@@ -428,8 +389,17 @@ public class MicromobilityUtils implements ParameterDefinition {
         }
         return sharingModes;
     }
+/**
+ * The following methods are in charge of translating the command line inputs into SMM services
+ */
+    /**
+     * Method process the command line arguments  given one prefix("sharing-service-name")
+     * @param prefix prefix that id's the values
+     * @param cmd command Line values
+     * @param services Empty hashmap of services ; will be filled with the values
+     */
     static public void buildParameters(String prefix,CommandLine cmd, HashMap<String,HashMap<String,String>>services) {
-
+        // Iterates through options
         for (String option : cmd.getAvailableOptions()) {
             if (option.startsWith(prefix + ":")) {
                 try {
@@ -445,6 +415,11 @@ public class MicromobilityUtils implements ParameterDefinition {
             }
         }
     }
+
+    /**
+     * Method  validates that each SMM service has the minimum parameters of SMM Framework
+     * @param services data of services
+     */
     static public void validateInput( HashMap<String,HashMap<String,String>> services) {
         ArrayList<String> obligatoryValues = new ArrayList<>(Arrays.asList("Service_File", "Mode", "Scheme","Service_Name","Multimodal","AccessEgress_Distance"));
         for (String key : services.keySet()) {
@@ -455,6 +430,11 @@ public class MicromobilityUtils implements ParameterDefinition {
             }
         }
     }
+
+    /**
+     *  Method validates that the GBFS files  exist
+     * @param services service specification parameters
+     */
     static public void validateInputGBFS( HashMap<String,HashMap<String,String>> services) {
         ArrayList<String> obligatoryValues = new ArrayList<>(Arrays.asList("Mode", "Scheme","Service_Name","Multimodal","AccessEgress_Distance"));
         for (String key : services.keySet()) {
@@ -479,16 +459,24 @@ public class MicromobilityUtils implements ParameterDefinition {
 
         }
     }
+
+    /**
+     * Transform a HashMap of values to severl services  with specifications of their owmn
+     * @param services values of several services
+     * @param config MATSim Config
+     * @param scenario MATSim scenario
+     * @throws IOException
+     */
     public static void generateServiceFile(HashMap<String,HashMap<String,String>>services, Config config,Scenario scenario) throws IOException {
         for (String key : services.keySet()) {
             HashMap<String, String> service = (HashMap) services.get(key);
             if(service.get("Scheme").equals("Station-Based")){
                 Network network=scenario.getNetwork();
-               service.put("Service_File",ReadStationBasedGBFS.readGBFSStationBased(service.get("StationsGBFS"),"Perro",network,service.get("StationsStatusGBFS"),service.get("Service_Name"))) ;
+               service.put("Service_File",ReadStationBasedGBFS.readGBFSStationBased(service.get("StationsGBFS"),"",network,service.get("StationsStatusGBFS"),service.get("Service_Name"))) ;
             }
             if(service.get("Scheme").equals("Free-floating")){
                 Network network=scenario.getNetwork();
-                service.put("Service_File", ReadFreeFloatingGBFS.readGBFSFreeFloating(service.get("FreeVehiclesGBFS"),"Perro",network,service.get("Service_Name"))) ;
+                service.put("Service_File", ReadFreeFloatingGBFS.readGBFSFreeFloating(service.get("FreeVehiclesGBFS"),"",network,service.get("Service_Name"))) ;
             }
         }
     }

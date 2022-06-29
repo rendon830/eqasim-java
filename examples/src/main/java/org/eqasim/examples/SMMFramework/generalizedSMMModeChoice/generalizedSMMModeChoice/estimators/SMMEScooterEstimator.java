@@ -3,9 +3,9 @@ package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMM
 import com.google.inject.Inject;
 import org.eqasim.core.simulation.mode_choice.utilities.UtilityEstimator;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.predictors.SMMEScooterPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussPersonPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussEScooterVariables;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussEqasimPersonVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.SMMPersonPredictor;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMEScooterVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMEqasimPersonVariables;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMParameters;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -18,13 +18,13 @@ public class SMMEScooterEstimator implements UtilityEstimator {
     private final SMMEScooterPredictor predictor;
 
     @Inject
-    public SMMEScooterEstimator(SMMParameters parameters, SMMEScooterPredictor predictor, KraussPersonPredictor personPredictor) {
+    public SMMEScooterEstimator(SMMParameters parameters, SMMEScooterPredictor predictor, SMMPersonPredictor personPredictor) {
         this.parameters = parameters;
         this.predictor = predictor;
 
     }
 
-    public SMMEScooterEstimator(SMMParameters parameters, SMMEScooterPredictor predictor, KraussPersonPredictor personPredictor, String name) {
+    public SMMEScooterEstimator(SMMParameters parameters, SMMEScooterPredictor predictor, SMMPersonPredictor personPredictor, String name) {
         this.parameters = parameters;
         this.predictor = predictor;
 
@@ -34,31 +34,31 @@ public class SMMEScooterEstimator implements UtilityEstimator {
         return parameters.bikeShare.alpha_u;
     }
     protected double estimatePersonalUtility(Person person, DiscreteModeChoiceTrip trip,List<? extends PlanElement> elements){
-        KraussPersonPredictor personPredictor=new KraussPersonPredictor();
-        KraussEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
+        SMMPersonPredictor personPredictor=new SMMPersonPredictor();
+        SMMEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
         double ageU=personVariables.age_a*parameters.eScooter.betaAge;
         double bikeAcc=personVariables.getBikeAcc()*parameters.eScooter.betaBikeAcc;
         double carAcc=personVariables.getCarAccessibility()*parameters.eScooter.betaCarAcc;
         double pTAcc=personVariables.getPtPass()*parameters.eScooter.betaPTPass;
         return(ageU+bikeAcc+carAcc+pTAcc);
     }
-    protected double estimateTravelTimeUtility(KraussEScooterVariables variables) {
+    protected double estimateTravelTimeUtility(SMMEScooterVariables variables) {
         return parameters.eScooter.betaTravelTime_u_min * variables.travelTime_u_min;
     }
 
-    protected double estimateAccessTimeUtility(KraussEScooterVariables variables) {
+    protected double estimateAccessTimeUtility(SMMEScooterVariables variables) {
         return parameters.eScooter.betaAccess_Time * variables.access_Time;
     }
 
-    protected double estimateMonetaryCostUtility(KraussEScooterVariables variables) {
+    protected double estimateMonetaryCostUtility(SMMEScooterVariables variables) {
         return -Math.exp(parameters.betaCost_u_MU) * variables.cost;
     }
 
-    protected double estimateEgressTimeUtility(KraussEScooterVariables variables) {
+    protected double estimateEgressTimeUtility(SMMEScooterVariables variables) {
         return parameters.eScooter.betaEgress_Time* variables.egress_Time;
     }
 
-    protected double estimateParkingTimeUtility(KraussEScooterVariables variables){
+    protected double estimateParkingTimeUtility(SMMEScooterVariables variables){
         return parameters.eScooter.betaParkingTime_u_min*variables.parkingTime_u_min;
     }
 
@@ -66,7 +66,7 @@ public class SMMEScooterEstimator implements UtilityEstimator {
 
     @Override
     public double estimateUtility(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
-        KraussEScooterVariables variables = predictor.predict(person, trip, elements);
+        SMMEScooterVariables variables = predictor.predict(person, trip, elements);
 
         double utility = 0.0;
 

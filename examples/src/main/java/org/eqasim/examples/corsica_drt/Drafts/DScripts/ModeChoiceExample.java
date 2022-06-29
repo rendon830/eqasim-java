@@ -4,7 +4,7 @@ import com.google.common.io.Resources;
 import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.sharing.run.SharingConfigGroup;
@@ -155,7 +155,7 @@ public class ModeChoiceExample {
 		controller.addOverridingModule(new EqasimAnalysisModule());
 		controller.addOverridingModule(new EqasimModeChoiceModule());
 //		controller.addOverridingModule(new IDFModeChoiceModule(cmd));
-		controller.addOverridingModule(new ModeChoiceModuleExample(cmd,scenario));
+		controller.addOverridingModule(new SMMBaseModeChoice(cmd,scenario));
 		controller.addOverridingModule(new MicroMobilityModeEqasimModeChoiceModule(cmd,scenario,"sharing:bikeShare","C:\\Users\\juan_\\Desktop\\TUM\\Semester5\\Thesis\\MATSim_Root\\SBBSDummy.xml"));
      	//controller.addOverridingModule(new MultiModalModule());
 		//controller.addOverridingModule(new SwissRailRaptorModule());

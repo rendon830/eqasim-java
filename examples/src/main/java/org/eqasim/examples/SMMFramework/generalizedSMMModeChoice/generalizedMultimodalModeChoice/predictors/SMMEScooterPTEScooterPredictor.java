@@ -14,7 +14,9 @@ import org.matsim.pt.routes.TransitPassengerRoute;
 
 import java.util.List;
 import java.util.ListIterator;
-
+/**
+ * Class predicts the characteristics of a eScooter PT  eScooter trip
+ */
 public class SMMEScooterPTEScooterPredictor extends CachedVariablePredictor<SharingPTVariables> {
 
     private final SMMMultimodalCostModel multimodalCostModel;

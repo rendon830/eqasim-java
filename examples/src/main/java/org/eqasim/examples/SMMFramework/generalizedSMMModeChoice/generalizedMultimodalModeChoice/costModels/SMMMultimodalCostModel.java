@@ -10,7 +10,7 @@ import org.matsim.contribs.discrete_mode_choice.model.DiscreteModeChoiceTrip;
 import java.util.List;
 
 /**
- * Class combines teh cost models of a SMM mode and PT
+ * Class combines the cost models of a SMM mode and PT
  */
 
 public class SMMMultimodalCostModel extends AbstractCostModel {

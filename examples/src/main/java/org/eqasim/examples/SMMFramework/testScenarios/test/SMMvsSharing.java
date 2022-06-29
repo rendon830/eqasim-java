@@ -6,7 +6,7 @@ import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.MicromobilityUtils;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.SharingRaptorUtils;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.matsim.api.core.v01.Scenario;
@@ -79,11 +79,11 @@ public class SMMvsSharing {
 
         eqasimConfig.setTripAnalysisInterval(5);
 
-                DiscreteModeChoiceConfigGroup dmcConfig=DiscreteModeChoiceConfigGroup.getOrCreate(config);
-                dmcConfig.setModelType(ModelModule.ModelType.Trip);
-                Collection<String> tripF=  dmcConfig.getTripFilters();
-                tripF.removeAll(tripF);
-                dmcConfig.setTripFilters(tripF);
+        DiscreteModeChoiceConfigGroup dmcConfig=DiscreteModeChoiceConfigGroup.getOrCreate(config);
+        dmcConfig.setModelType(ModelModule.ModelType.Trip);
+        Collection<String> tripF=  dmcConfig.getTripFilters();
+        tripF.removeAll(tripF);
+        dmcConfig.setTripFilters(tripF);
 
 
         for (StrategyConfigGroup.StrategySettings strategy : config.strategy().getStrategySettings()) {
@@ -103,11 +103,9 @@ public class SMMvsSharing {
         IDFConfigurator.configureController(controller);
         controller.addOverridingModule(new EqasimAnalysisModule());
         controller.addOverridingModule(new EqasimModeChoiceModule());
-        controller.addOverridingModule( new ModeChoiceModuleExample(cmd,scenario));
+        controller.addOverridingModule( new SMMBaseModeChoice(cmd,scenario));
         MicromobilityUtils.addSharingServices(cmd,controller,config,scenario);
 
-        ConfigWriter cw=new ConfigWriter(config);
-        cw.write("verificationConfig.xml");
         controller.run();
     }
     public static void runAsSharingRaptor(CommandLine cmd, Integer i){

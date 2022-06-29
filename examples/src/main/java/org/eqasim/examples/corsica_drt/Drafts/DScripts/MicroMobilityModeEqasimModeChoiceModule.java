@@ -12,14 +12,13 @@ import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMult
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMultimodalModeChoice.predictors.SMMBikeSharePTPredictor;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMultimodalModeChoice.predictors.SMMBikeSharingPTBikeSharingPredictor;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMultimodalModeChoice.predictors.SMMPTBikeSharePredictor;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.predictors.SMMBikeSharePredictor;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMCostParameters;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMModeAvailability;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.cost.KraussBikeShareCostModel;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussBikeSharePredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussPersonPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.utilities.KraussBikeShareEstimator;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.cost.SMMBikeShareCostModel;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.KraussBikeSharePredictor;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.SMMPersonPredictor;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.KraussBikeShareEstimator;
 import org.eqasim.examples.corsica_drt.Drafts.DGeneralizedMultimodal.sharingPt.PTStationFinder;
 import org.eqasim.examples.corsica_drt.Drafts.DGeneralizedMultimodal.sharingPt.SharingPTModeChoiceModule;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMParameters;
@@ -70,7 +69,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		}
 		bindUtilityEstimator("sharing:"+name).toInstance(generalEstimator);
 		try {
-			bindCostModel("sharing:"+name).toInstance(new SMMBikeShareCostModel("sharing:bikeShare",this.provideCostParameters((EqasimConfigGroup)this.scenario.getConfig().getModules().get("eqasim"),this.commandLine)));
+			bindCostModel("sharing:"+name).toInstance(new org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel("sharing:bikeShare",this.provideCostParameters((EqasimConfigGroup)this.scenario.getConfig().getModules().get("eqasim"),this.commandLine)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,33 +117,33 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 			}catch (Exception e){}
 		}
 
-		bind(KraussPersonPredictor.class);
+		bind(SMMPersonPredictor.class);
 	}
 
 
 
-	public KraussBikeSharePredictor provideBikeSharePredictor(KraussBikeShareCostModel costModel, String name){
+	public KraussBikeSharePredictor provideBikeSharePredictor(SMMBikeShareCostModel costModel, String name){
 		KraussBikeSharePredictor temporalPredictor= new KraussBikeSharePredictor(costModel, name);
 		return temporalPredictor;
 
 	}
 
 
-	public KraussBikeShareEstimator provideBikeShareEstimator(String name, SMMParameters modeParameters, KraussBikeSharePredictor predictor, KraussPersonPredictor personPredictor){
+	public KraussBikeShareEstimator provideBikeShareEstimator(String name, SMMParameters modeParameters, KraussBikeSharePredictor predictor, SMMPersonPredictor personPredictor){
 		KraussBikeShareEstimator temporalEstimator=new KraussBikeShareEstimator(modeParameters,predictor, personPredictor, name);
 		return temporalEstimator;
 
 	}
 
 
-   public SMMBikeShareCostModel provideBikeShareCostModel(EqasimConfigGroup config, String name){
+   public org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel provideBikeShareCostModel(EqasimConfigGroup config, String name){
 	   SMMCostParameters costParameters= null;
 	   try {
 		   costParameters = provideCostParameters(config,this.commandLine);
 	   } catch (Exception e) {
 		   e.printStackTrace();
 	   }
-	   SMMBikeShareCostModel bikeShareCostModel= new SMMBikeShareCostModel(name, costParameters);
+	   org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel bikeShareCostModel= new org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel(name, costParameters);
 	   return(bikeShareCostModel);
    }
 
@@ -173,9 +172,9 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 	}
 	private SMMBikeShareEstimator addSharingServiceToEqasim(EqasimConfigGroup config, CommandLine commandLine, String name) throws Exception {
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
-		SMMBikeShareCostModel costModel=new SMMBikeShareCostModel(name,costParameters);
+		org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel costModel=new org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel(name,costParameters);
 		SMMBikeSharePredictor bikePredictor=new SMMBikeSharePredictor(costModel,"sharing:"+name);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMBikeShareEstimator bikeEstimator=new SMMBikeShareEstimator(modeParams,bikePredictor,personPredictor,name);
 		return bikeEstimator;
@@ -185,7 +184,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
 		SMMMultimodalCostModel costModel=new SMMMultimodalCostModel(name,costParameters);
 		SMMBikeSharingPTBikeSharingPredictor predictor =new SMMBikeSharingPTBikeSharingPredictor(costModel,costParameters,name, underlyingMode);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMBikeSharePTBikeShareEstimator estimator=new SMMBikeSharePTBikeShareEstimator(modeParams,predictor,name);
 		return estimator;
@@ -194,7 +193,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
 		SMMMultimodalCostModel costModel=new SMMMultimodalCostModel(name,costParameters);
 		SMMBikeSharingPTBikeSharingPredictor predictor =new SMMBikeSharingPTBikeSharingPredictor(costModel,costParameters,name, underlyingMode);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMEScooterPTEScooterEstimator estimator=new SMMEScooterPTEScooterEstimator(modeParams,predictor,name);
 		return estimator;
@@ -204,7 +203,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
 		SMMMultimodalCostModel costModel=new SMMMultimodalCostModel(name,costParameters);
 		SMMBikeSharePTPredictor predictor = new SMMBikeSharePTPredictor(costModel,costParameters,name, underlyingMode);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMBikeSharePTEstimator estimator= new SMMBikeSharePTEstimator(modeParams,predictor,name);
 		return estimator;
@@ -213,7 +212,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
 		SMMMultimodalCostModel costModel=new SMMMultimodalCostModel(name,costParameters);
 		SMMBikeSharePTPredictor predictor = new SMMBikeSharePTPredictor(costModel,costParameters,name, underlyingMode);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMEScooterPTEstimator estimator= new SMMEScooterPTEstimator(modeParams,predictor,name);
 		return estimator;
@@ -222,7 +221,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
 		SMMMultimodalCostModel costModel=new SMMMultimodalCostModel(name,costParameters);
 		SMMPTBikeSharePredictor predictor = new SMMPTBikeSharePredictor(costModel,costParameters,name, underlyingMode);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMPTBikeShareEstimator estimator= new SMMPTBikeShareEstimator(modeParams,predictor,name);
 		return estimator;
@@ -231,7 +230,7 @@ public class MicroMobilityModeEqasimModeChoiceModule extends AbstractEqasimExten
 		SMMCostParameters costParameters= SMMCostParameters.provideCostParameters(config,commandLine);
 		SMMMultimodalCostModel costModel=new SMMMultimodalCostModel(name,costParameters);
 		SMMPTBikeSharePredictor predictor = new SMMPTBikeSharePredictor(costModel,costParameters,name, underlyingMode);
-		KraussPersonPredictor personPredictor=new KraussPersonPredictor();
+		SMMPersonPredictor personPredictor=new SMMPersonPredictor();
 		SMMParameters modeParams= new SharingPTModeChoiceModule(commandLine,null).provideModeChoiceParameters(config);
 		SMMPTEScooterEstimator estimator= new SMMPTEScooterEstimator(modeParams,predictor,name);
 		return estimator;

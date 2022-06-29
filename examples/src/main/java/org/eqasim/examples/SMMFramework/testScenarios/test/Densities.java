@@ -6,7 +6,7 @@ import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.MicromobilityUtils;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 
 import org.eqasim.examples.SMMFramework.testScenarios.utils.SharingRaptorUtils;
 import org.eqasim.ile_de_france.IDFConfigurator;
@@ -44,8 +44,7 @@ public class Densities {
                     if (i == 1) {
 
                             simParams = parseParams(fileName);
-//                        String stationInf=baseDirect+"StationInformation_SD_"+statDensity[j]+"_VD_"+vehDensity[k]+".json";
-//                        String stationStatus=baseDirect+"StationStatus_SD_"+statDensity[j]+"_VD_"+vehDensity[k]+".json";
+
                             String stationInf = baseDirect + "StationInformation_SD_" + statDensity[k] + "_VD_" + vehDensity[j] + ".json";
                             String stationStatus = baseDirect + "StationStatus_SD_" + statDensity[k] + "_VD_" + vehDensity[j] + ".json";
                             simParams[3] = stationInf;
@@ -55,7 +54,7 @@ public class Densities {
                                     .allowPrefixes("mode-parameter", "cost-parameter", "sharing-mode-name") //
                                     .build();
                             runAsSMMFramework(cmd, i, vehDensity[j], statDensity[k]);
-                            String uwu = "x";
+
 
                     }
                 }
@@ -146,7 +145,7 @@ public class Densities {
         IDFConfigurator.configureController(controller);
         controller.addOverridingModule(new EqasimAnalysisModule());
         controller.addOverridingModule(new EqasimModeChoiceModule());
-        controller.addOverridingModule( new ModeChoiceModuleExample(cmd,scenario));
+        controller.addOverridingModule( new SMMBaseModeChoice(cmd,scenario));
         MicromobilityUtils.addSharingServices(cmd,controller,config,scenario);
 
         ConfigWriter cw=new ConfigWriter(config);

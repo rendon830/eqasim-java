@@ -2,6 +2,9 @@ package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMM
 
 import org.eqasim.core.simulation.mode_choice.utilities.variables.BaseVariables;
 
+/**
+ * Class defines the utility  variables of a PT_SMM trip
+ */
 public class PTSharingVariables implements BaseVariables {
     // Variables for PT
     public double travelTime_u_min;

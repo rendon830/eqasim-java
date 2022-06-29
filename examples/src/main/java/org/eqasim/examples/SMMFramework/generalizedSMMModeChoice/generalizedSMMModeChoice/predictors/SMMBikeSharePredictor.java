@@ -4,7 +4,7 @@ import org.eqasim.core.simulation.mode_choice.cost.CostModel;
 import org.eqasim.core.simulation.mode_choice.utilities.predictors.CachedVariablePredictor;
 import org.eqasim.core.simulation.mode_choice.utilities.predictors.PredictorUtils;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussBikeShareVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMBikeShareVariables;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -13,7 +13,7 @@ import org.matsim.contribs.discrete_mode_choice.model.DiscreteModeChoiceTrip;
 
 import java.util.List;
 
-public class SMMBikeSharePredictor extends CachedVariablePredictor<KraussBikeShareVariables> {
+public class SMMBikeSharePredictor extends CachedVariablePredictor<SMMBikeShareVariables> {
     private SMMBikeShareCostModel costModel;
     public static final String BIKE_SHARE_MODE="Shared-Bike";
     double sharedBikeSpeed = 6.11;// Proxy of 22kph
@@ -28,7 +28,7 @@ public class SMMBikeSharePredictor extends CachedVariablePredictor<KraussBikeSha
         this.costModel = (SMMBikeShareCostModel) costModel;
     }
     @Override
-    public KraussBikeShareVariables predict(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
+    public SMMBikeShareVariables predict(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements) {
 
         int numberOfVehicularTrips = 0;
         boolean isFirstWaitingTime = true;
@@ -96,6 +96,6 @@ public class SMMBikeSharePredictor extends CachedVariablePredictor<KraussBikeSha
 
         double cost=costModel.calculateCost_MU(person,trip,elements);
         double euclideanDistance_km = PredictorUtils.calculateEuclideanDistance_km(trip);
-        return new KraussBikeShareVariables(travelTime_min, accessTime_min, egressTime_min, 0, 0, 0, 0, 0,cost);
+        return new SMMBikeShareVariables(travelTime_min, accessTime_min, egressTime_min, 0, 0, 0, 0, 0,cost);
     }
 }

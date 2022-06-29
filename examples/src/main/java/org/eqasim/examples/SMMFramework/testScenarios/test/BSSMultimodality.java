@@ -6,7 +6,7 @@ import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.MicromobilityUtils;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.SharingRaptorUtils;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.matsim.api.core.v01.Scenario;
@@ -31,10 +31,7 @@ public class BSSMultimodality {
 
         String baseName=".\\MultimodalityScenarios\\Scenario";
         String[] simParams= new String[]{};
-        for (int i=6;i<7;i++){
-            if(i!=5) {
-
-
+        for (int i=4;i<7;i++){
                 String fileName = baseName + String.valueOf(i) + ".txt";
                 simParams = parseParams(fileName);
                 CommandLine cmd = new CommandLine.Builder(simParams) //
@@ -42,7 +39,6 @@ public class BSSMultimodality {
                         .allowPrefixes("mode-parameter", "cost-parameter", "sharing-mode-name") //
                         .build();
                 runAsSMMFramework(cmd, i);
-            }
         }
 
     }
@@ -107,7 +103,7 @@ public class BSSMultimodality {
         IDFConfigurator.configureController(controller);
         controller.addOverridingModule(new EqasimAnalysisModule());
         controller.addOverridingModule(new EqasimModeChoiceModule());
-        controller.addOverridingModule( new ModeChoiceModuleExample(cmd,scenario));
+        controller.addOverridingModule( new SMMBaseModeChoice(cmd,scenario));
         MicromobilityUtils.addSharingServices(cmd,controller,config,scenario);
 
         ConfigWriter cw=new ConfigWriter(config);

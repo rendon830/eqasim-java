@@ -2,8 +2,8 @@ package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMul
 
 import org.eqasim.core.simulation.mode_choice.utilities.UtilityEstimator;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedMultimodalModeChoice.predictors.SMMBikeSharingPTBikeSharingPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussPersonPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.KraussEqasimPersonVariables;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.SMMPersonPredictor;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.variables.SMMEqasimPersonVariables;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SMMParameters;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.variables_parameters.SharingPTVariables;
 import org.matsim.api.core.v01.population.Person;
@@ -13,7 +13,7 @@ import org.matsim.contribs.discrete_mode_choice.model.DiscreteModeChoiceTrip;
 import java.util.List;
 
 /**
- * Class estimates the utility of a SharingBike-PT trip based on the variables of such
+ * Class estimates the utility of a SharingBike-PT-Sharingbike trip based on the variables of such
  */
 public class SMMBikeSharePTBikeShareEstimator implements UtilityEstimator {
 
@@ -37,8 +37,8 @@ public class SMMBikeSharePTBikeShareEstimator implements UtilityEstimator {
 
     }
     protected double estimatePersonalUtilityPT(Person person, DiscreteModeChoiceTrip trip, List<? extends PlanElement> elements){
-        KraussPersonPredictor personPredictor=new KraussPersonPredictor();
-        KraussEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
+        SMMPersonPredictor personPredictor=new SMMPersonPredictor();
+        SMMEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
         double ageU=personVariables.age_a*parameters.pt.betaAge;
         double bikeAcc=personVariables.getBikeAcc()*parameters.pt.betaBikeAcc;
         double pTAcc=personVariables.getPtPass()*parameters.pt.betaPTPass;
@@ -46,8 +46,8 @@ public class SMMBikeSharePTBikeShareEstimator implements UtilityEstimator {
         return(ageU+bikeAcc+pTAcc+carAcc);
     }
     protected double estimatePersonalUtilitySharing(Person person, DiscreteModeChoiceTrip trip,List<? extends PlanElement> elements){
-        KraussPersonPredictor personPredictor=new KraussPersonPredictor();
-        KraussEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
+        SMMPersonPredictor personPredictor=new SMMPersonPredictor();
+        SMMEqasimPersonVariables personVariables=personPredictor.predictVariables(person,trip,elements);
         double ageU=personVariables.age_a*parameters.bikeShare.betaAge;
         double bikeAcc=personVariables.getBikeAcc()*parameters.bikeShare.betaBikeAcc;
         double carAcc=personVariables.getCarAccessibility()*parameters.bikeShare.betaCarAcc;
@@ -106,12 +106,14 @@ public class SMMBikeSharePTBikeShareEstimator implements UtilityEstimator {
         double utility = 0.0;
 
         utility += estimateConstantUtility();
+        // Sharing utility
         utility += estimateTravelTimeUtilitySharing(variables);
         utility += estimateAccessTimeUtilitySharing(variables);
         utility += estimateMonetaryCostUtilitySharing(variables);
         utility += estimateEgressTimeUtilitySharing(variables);
         utility+= estimateParkingTimeUtilitySharing(variables);
         utility+=estimatePersonalUtilitySharing(person,trip,elements);
+        // PT utility
         utility += estimateTravelTimeUtilityPT(variables);
         utility += estimateAccessTimeUtilityPT(variables);
         utility += estimateMonetaryCostUtilityPT(variables);

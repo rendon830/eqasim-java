@@ -7,7 +7,7 @@ import org.eqasim.core.simulation.mode_choice.ParameterDefinition;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.estimators.SMMBikeShareEstimator;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.predictors.SMMBikeSharePredictor;
 import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMMModeChoice.costModels.SMMBikeShareCostModel;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.KraussPersonPredictor;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.predictors.SMMPersonPredictor;
 import org.eqasim.examples.corsica_drt.Drafts.DGeneralizedMultimodal.sharingPt.SharingPTModeChoiceModule;
 import org.matsim.core.config.CommandLine;
 
@@ -19,6 +19,9 @@ import java.util.Set;
 
 import static org.geotools.feature.type.DateUtil.isEqual;
 
+/**
+ * Class  is responsible of storing cost structures and add the SMM cosz structures
+ */
 public class SMMCostParameters implements ParameterDefinition {
     public double carCost_Km;
     public double bookingCostBikeShare;
@@ -29,82 +32,8 @@ public class SMMCostParameters implements ParameterDefinition {
     public HashMap<String, Double> sharingBookingCosts;
     public HashMap<String, Double> sharingMinCosts;
 
-//    public static void main(String[] args) throws Exception {
-//        CommandLine cmd = new CommandLine.Builder(args) //
-//                .allowOptions("use-rejection-constraint") //
-//                .allowPrefixes("mode-parameter", "cost-parameter") //
-//                .build();
-//        GeneralizedCostParameters parameters = GeneralizedCostParameters.buildDefault();
-//        GeneralizedCostParameters.applyCommandLineMicromobility("cost-parameter", cmd, parameters);
-//        List<? extends PlanElement> sharingAccess = null;
-//        PopulationFactory popFact = new newPopFactory2(null);
-//        Leg walk = popFact.createLeg("walk");
-//        walk.setDepartureTime((9 * 60 * 60) + (59 * 60));
-//        walk.setTravelTime(60);
-//        Route walkRoute1 = new RouteTestImpl();
-//        walkRoute1.setDistance(100.0);
-//        walkRoute1.setTravelTime(60.0);
-//        walk.setRoute(walkRoute1);
-//        Activity booking = ((newPopFactory2) popFact).createTestActivity("sharing booking interaction", ((10 * 60 * 60) + 60), (10 * 60 * 60), new Coord(0, 1));
-//        booking.setMaximumDuration(60);
-//        booking.getMaximumDuration();
-//        Leg walk2 = popFact.createLeg("walk");
-//        walk2.setDepartureTime((10 * 60 * 60) + (60));
-//        walk2.setTravelTime(0);
-//        Route walkRoute2 = new RouteTestImpl();
-//        walkRoute2.setDistance(0);
-//        walkRoute2.setTravelTime(0);
-//        Activity pickUp = ((newPopFactory2) popFact).createTestActivity("sharing pickup interaction", ((10 * 60 * 60) + 60), ((10 * 60 * 60) + 60), new Coord(0, 1));
-//        pickUp.setMaximumDuration(60);
-//        Leg bikeLeg = popFact.createLeg("bike");
-//        bikeLeg.setDepartureTime((10 * 60 * 60) + (60));
-//        bikeLeg.setTravelTime(15 * 60);
-//        Route bikeRoute = new RouteTestImpl();
-//        bikeRoute.setDistance(4000);
-//        bikeRoute.setTravelTime(15 * 60);
-//        bikeLeg.setRoute(bikeRoute);
-//
-//        Activity dropOff = ((newPopFactory2) popFact).createTestActivity("sharing dropoff interaction", ((10 * 60 * 60) + (15 * 60)), ((10 * 60 * 60) + (15 * 60)), new Coord(15, 20));
-////        dropOff.setMaximumDuration(60);
-//
-//        Leg walk3 = popFact.createLeg("walk");
-//        walk3.setDepartureTime((10 * 60 * 60) + (15 * 60));
-//        walk3.setTravelTime(5 * 60);
-//        Route walkRoute3 = new RouteTestImpl();
-//        walkRoute3.setDistance(100);
-//        walkRoute3.setTravelTime(5 * 60);
-//        walk3.setRoute(walkRoute3);
-//
-//        List<PlanElement> sharingEgress = new LinkedList<>();
-//        sharingEgress.add((PlanElement) walk);
-//        sharingEgress.add((PlanElement) booking);
-//        sharingEgress.add((PlanElement) walk2);
-//        sharingEgress.add((PlanElement) pickUp);
-//        sharingEgress.add((PlanElement) bikeLeg);
-//        sharingEgress.add((PlanElement) dropOff);
-//        sharingEgress.add((PlanElement) walk3);
-//        GeneralizedBikeShareCostModel costModel = new GeneralizedBikeShareCostModel("BikeShareStandard", parameters);
-//        Double distance = costModel.getInVehicleDistance_km(sharingEgress);
-//        Double cost = costModel.calculateCost_MU(null, null, sharingEgress);
-//
-//        GeneralizedBikeShareEstimator estimator = buildDefault().addSharingServiceToEqasim(new EqasimConfigGroup(), cmd, "BikeShareStandard");
-//
-//        DiscreteModeChoiceTrip trip = new DiscreteModeChoiceTrip(booking, dropOff, "walk",
-//                Collections.emptyList(), 0, 0, 0);
-//
-//        Person personProx = popFact.createPerson(Id.createPersonId("person"));
-//        personProx.getAttributes().putAttribute("age_a", 25);
-//        personProx.getAttributes().putAttribute("bikeAvailability", "some");
-//        personProx.getAttributes().putAttribute("carAvailavility", "none");
-//        personProx.getAttributes().putAttribute("hasPtSubscription", false);
-//        personProx.getAttributes().putAttribute("age", 25);
-//
-//        Double utility = estimator.estimateUtility(personProx, trip, sharingEgress);
-//        String x = "Uwu";
-//
-//
-//    }
-//
+
+//Method process the command Line arguments and converts them into cost structures
     public static void applyCommandLineMicromobility(String prefix, CommandLine cmd, ParameterDefinition parameterDefinition) throws Exception {
         Map<String, String> values = new HashMap<>();
 
@@ -119,11 +48,13 @@ public class SMMCostParameters implements ParameterDefinition {
         }
 
         // ParameterDefinition.applyMap(parameterDefinition, values);
+        // Apply the cost of SMM values
         applyMapMicromobilityCost(parameterDefinition, values);
+        // Validates all values are present
         validateSharingCostParameters((SMMCostParameters) parameterDefinition);
 
     }
-
+    // Method genertes the cost parameters for SMM modes based on command Line arguments
     private static void applyMapMicromobilityCost(ParameterDefinition parameterDefinition, Map<String, String> values) throws Exception {
         for (Map.Entry<String, String> entry : values.entrySet()) {
             String option = entry.getKey();
@@ -135,25 +66,21 @@ public class SMMCostParameters implements ParameterDefinition {
                 if (parts[0].equals("sharingBookingCosts") || parts[0].equals("sharingMinCosts")) {
                     Object activeObject = parameterDefinition;
 
-
+                    // fills the SMM cost structure map with values
                     Field field = activeObject.getClass().getField(parts[0]);
                     if (field.getType() == HashMap.class || field.getType() == Map.class) {
                         HashMap<String, Double> reeplacement = (HashMap<String, Double>) field.get(activeObject);
                         reeplacement.put("sharing:" + parts[1], Double.parseDouble(value));
-
-                        System.out.println("xdxd");
-                        //field.set(activeObject,reeplacement);
-                        System.out.println("xdxd");
                     }
 
 
                     logger.info(String.format("Set %s = %s", option, value));
                 } else {
+                    // Fills the traditional mode svalues
                     Object activeObject = parameterDefinition;
 
                     for (int i = 0; i < parts.length; i++) {
-                        Field field = activeObject.getClass().getField(parts[i]);// coge el campo
-
+                        Field field = activeObject.getClass().getField(parts[i]);
                         if (i == numberOfParts - 1) {
                             // We need to set the value
                             if (field.getType() == Double.class || field.getType() == double.class) {
@@ -195,7 +122,7 @@ public class SMMCostParameters implements ParameterDefinition {
 
 
     }
-
+    // Default values builder
 
     public static SMMCostParameters buildDefault() {
         SMMCostParameters parameters = new SMMCostParameters();
@@ -210,7 +137,7 @@ public class SMMCostParameters implements ParameterDefinition {
 
         return parameters;
     }
-
+    // Validates the SMM modes parameters, need cost per min and booking cost for each mode
     public static void validateSharingCostParameters(SMMCostParameters parameterDefinition) throws Exception {
         Set<String> sharingKMCosts = parameterDefinition.sharingMinCosts.keySet();
         Set<String> sharingBookingCosts = parameterDefinition.sharingBookingCosts.keySet();
@@ -234,57 +161,7 @@ public class SMMCostParameters implements ParameterDefinition {
         return parameters;
     }
 
-    private SMMBikeShareEstimator addSharingServiceToEqasim(EqasimConfigGroup config, CommandLine commandLine, String name) throws Exception {
-        SMMCostParameters costParameters = SMMCostParameters.provideCostParameters(config, commandLine);
-        SMMBikeShareCostModel costModel = new SMMBikeShareCostModel(name, costParameters);
-        SMMBikeSharePredictor bikePredictor = new SMMBikeSharePredictor(costModel, name);
-        KraussPersonPredictor personPredictor = new KraussPersonPredictor();
-        SMMParameters modeParams = new SharingPTModeChoiceModule(commandLine, null).provideModeChoiceParameters(config);
-        SMMBikeShareEstimator bikeEstimator = new SMMBikeShareEstimator(modeParams, bikePredictor, personPredictor, name);
-        return bikeEstimator;
-    }
 
-    public static void applyMapMicromobilityCosts(SMMCostParameters parameterDefinition, Map<String, String> values) {
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            String option = entry.getKey();
-            String value = entry.getValue();
-
-            try {
-                String[] parts = option.split("\\.");
-                int numberOfParts = parts.length;
-
-                Object activeObject = parameterDefinition;
-
-
-                Field field = activeObject.getClass().getField(parts[0]);
-
-
-                logger.info(String.format("Set %s = %s", option, value));
-            } catch (NoSuchFieldException e) {
-                throw new IllegalStateException(String.format("Parameter %s does not exist", option));
-            } catch (SecurityException | IllegalArgumentException e) {
-                logger.error("Error while processing option " + option);
-                throw new RuntimeException(e);
-            }
-
-
-        }
-
-
-    }
 }
 
 
-
-//    @Provides
-//    @Singleton
-//    public KraussCostParameters provideCostParameters(EqasimConfigGroup config) {
-//        KraussCostParameters parameters = KraussCostParameters.buildDefault();
-//
-//        if (config.getCostParametersPath() != null) {
-//            ParameterDefinition.applyFile(new File(config.getCostParametersPath()), parameters);
-//        }
-//
-//        ParameterDefinition.applyCommandLine("cost-parameter", commandLine, parameters);
-//        return parameters;
-//    }

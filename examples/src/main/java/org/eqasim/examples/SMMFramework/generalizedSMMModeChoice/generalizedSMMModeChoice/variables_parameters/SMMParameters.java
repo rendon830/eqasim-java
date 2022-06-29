@@ -2,6 +2,9 @@ package org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.generalizedSMM
 
 import org.eqasim.core.simulation.mode_choice.parameters.ModeParameters;
 
+/**
+ * Class defines the utility parameters of all modes
+ */
 public class SMMParameters extends ModeParameters {
 
 

@@ -15,6 +15,9 @@ import org.matsim.pt.routes.TransitPassengerRoute;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * Class predicts the characteristics of a bikeshare PT trip
+ */
 public class SMMBikeSharePTPredictor extends CachedVariablePredictor<SharingPTVariables> {
     private final SMMMultimodalCostModel multimodalCostModel;
 
@@ -57,6 +60,13 @@ public class SMMBikeSharePTPredictor extends CachedVariablePredictor<SharingPTVa
 
         return(sharingPTVariables);
     }
+
+    /**
+     * Finds the index  of  activity elements in a trip
+     * @param elements elements of trip
+     * @param actName  activity name
+     * @return index
+     */
     public Integer findIndex( List<? extends PlanElement> elements, String actName){
        elements=(List<PlanElement>)elements;
        Integer index=100000;
@@ -72,6 +82,7 @@ public class SMMBikeSharePTPredictor extends CachedVariablePredictor<SharingPTVa
         }
         return index;
     }
+
 
     public void predictSharingAcces(SharingPTVariables variables,List<? extends PlanElement> accessSplit, Person person,DiscreteModeChoiceTrip accessTrip){
         // double vehicleDistance = Double.NaN;
@@ -291,8 +302,6 @@ public class SMMBikeSharePTPredictor extends CachedVariablePredictor<SharingPTVa
         }
         // Calculate cost
 
-//        DiscreteModeChoiceTrip egressTrip = new DiscreteModeChoiceTrip(ptSharing,trip.getDestinationActivity(), "sharing:bikeShare",sharingEgress,person.getPlans().hashCode(),0,0);
-//         double euclideanDistance_kmE = PredictorUtils.calculateEuclideanDistance_km(egressTrip);
         cost_MU_bikeShare+=multimodalCostModel.calculateCost_MU_Sharing(person,egressTrip,egressSplit);
         variables.setTravelTime_u_min(travelTime_min);
         variables.setAccess_Time_Sharing(accessTime_min);

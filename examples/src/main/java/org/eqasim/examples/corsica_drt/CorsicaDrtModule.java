@@ -10,12 +10,12 @@ import org.eqasim.core.simulation.mode_choice.ParameterDefinition;
 import org.eqasim.core.simulation.mode_choice.cost.CostModel;
 import org.eqasim.core.simulation.mode_choice.parameters.ModeParameters;
 import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.CorsicaDrtModeAvailability;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.cost.DrtCostModel;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.DrtCostModel;
 
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.parameters.CorsicaDrtCostParameters;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.parameters.CorsicaDrtModeParameters;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.utilities.DrtPredictor;
-import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.utilities.DrtUtilityEstimator;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.CorsicaDrtCostParameters;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.CorsicaDrtModeParameters;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.DrtPredictor;
+import org.eqasim.examples.corsica_drt.Drafts.otherDrafts.DrtUtilityEstimator;
 import org.eqasim.ile_de_france.mode_choice.parameters.IDFCostParameters;
 import org.eqasim.ile_de_france.mode_choice.parameters.IDFModeParameters;
 import org.matsim.core.config.CommandLine;

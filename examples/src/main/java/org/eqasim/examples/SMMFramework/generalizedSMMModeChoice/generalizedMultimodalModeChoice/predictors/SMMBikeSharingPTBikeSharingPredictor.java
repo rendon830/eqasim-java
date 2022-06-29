@@ -14,7 +14,9 @@ import org.matsim.pt.routes.TransitPassengerRoute;
 
 import java.util.List;
 import java.util.ListIterator;
-
+/**
+ * Class predicts the characteristics of a bikeshare PT bikeshare trip
+ */
 public class SMMBikeSharingPTBikeSharingPredictor extends CachedVariablePredictor<SharingPTVariables> {
 
     private final SMMMultimodalCostModel multimodalCostModel;

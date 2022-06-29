@@ -1,10 +1,9 @@
 package org.eqasim.examples.SMMFramework;
 
-import com.google.common.io.Resources;
 import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.MicromobilityUtils;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.matsim.api.core.v01.Scenario;
@@ -13,12 +12,10 @@ import org.matsim.contribs.discrete_mode_choice.modules.config.DiscreteModeChoic
 import org.matsim.core.config.CommandLine;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.ConfigWriter;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.scenario.ScenarioUtils;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 public class RunSMMFramework {
@@ -75,7 +72,7 @@ public class RunSMMFramework {
         controller.addOverridingModule(new EqasimAnalysisModule());
         controller.addOverridingModule(new EqasimModeChoiceModule());
         // Add mode choice SMM module
-        controller.addOverridingModule(new ModeChoiceModuleExample(cmd, scenario));
+        controller.addOverridingModule(new SMMBaseModeChoice(cmd, scenario));
         // Add SMM modes
         MicromobilityUtils.addSharingServices(cmd, controller, config, scenario);
         controller.run();

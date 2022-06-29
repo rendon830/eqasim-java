@@ -14,7 +14,9 @@ import org.matsim.pt.routes.TransitPassengerRoute;
 
 import java.util.List;
 import java.util.ListIterator;
-
+/**
+ * Class predicts the characteristics of a  PT bikesharing trip
+ */
 public class SMMPTBikeSharePredictor extends CachedVariablePredictor<SharingPTVariables> {
     private final SMMMultimodalCostModel multimodalCostModel;
 
@@ -291,8 +293,7 @@ public class SMMPTBikeSharePredictor extends CachedVariablePredictor<SharingPTVa
         }
         // Calculate cost
 
-//        DiscreteModeChoiceTrip egressTrip = new DiscreteModeChoiceTrip(ptSharing,trip.getDestinationActivity(), "sharing:bikeShare",sharingEgress,person.getPlans().hashCode(),0,0);
-//         double euclideanDistance_kmE = PredictorUtils.calculateEuclideanDistance_km(egressTrip);
+
         cost_MU_bikeShare+=multimodalCostModel.calculateCost_MU_Sharing(person,egressTrip,egressSplit);
         variables.setTravelTime_u_min(travelTime_min);
         variables.setAccess_Time_Sharing(accessTime_min);

@@ -1,14 +1,12 @@
 package org.eqasim.examples.SMMFramework.testScenarios.test;
 
-import ch.sbb.matsim.routing.pt.raptor.SwissRailRaptorModule;
 import com.google.common.io.Resources;
 
 import org.eqasim.core.components.config.EqasimConfigGroup;
 import org.eqasim.core.simulation.analysis.EqasimAnalysisModule;
 import org.eqasim.core.simulation.mode_choice.EqasimModeChoiceModule;
 import org.eqasim.examples.SMMFramework.testScenarios.utils.MicromobilityUtils;
-import org.eqasim.examples.SMMFramework.generalizedSMMModeChoice.ModeChoiceModuleExample;
-import org.eqasim.examples.SMMFramework.testScenarios.utils.SharingRaptorUtils;
+import org.eqasim.examples.SMMFramework.SMMBaseModeChoice.SMMBaseModeChoice;
 import org.eqasim.ile_de_france.IDFConfigurator;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contribs.discrete_mode_choice.modules.DiscreteModeChoiceModule;
@@ -98,7 +96,7 @@ public class CostStructures {
         config.controler().setWriteEventsInterval(1);
         config.controler().setWritePlansInterval(1);
         config.controler().setLastIteration(25);
-        String baseDirectory="./CostSMMResultsLDNoInter/Scenario";
+        String baseDirectory="./CostSMMResults/Scenario";
         String nameScenario=baseDirectory+String.valueOf(i)+"_"+String.valueOf(j);
         config.controler().setOutputDirectory(nameScenario);
 //        // Set up controller (no specific settings needed for scenario)
@@ -115,19 +113,17 @@ public class CostStructures {
                 strategy.setWeight(0.8);
             }
         }
-        for(String option: cmd.getAvailableOptions()){
-            String x=option;
-            String value= (cmd.getOptionStrict(option));
-            if(value.equals("No")){
-                DiscreteModeChoiceConfigGroup dmcConfig=DiscreteModeChoiceConfigGroup.getOrCreate(config);
-                dmcConfig.setModelType(ModelModule.ModelType.Trip);
-                Collection<String> tripF=  dmcConfig.getTripFilters();
-                tripF.removeAll(tripF);
-                dmcConfig.setTripFilters(tripF);
-                break;
 
-            }
-        }
+
+        DiscreteModeChoiceConfigGroup dmcConfig=DiscreteModeChoiceConfigGroup.getOrCreate(config);
+        dmcConfig.setModelType(ModelModule.ModelType.Trip);
+        Collection<String> tripF=  dmcConfig.getTripFilters();
+        tripF.removeAll(tripF);
+        dmcConfig.setTripFilters(tripF);
+
+
+
+
         //Key Apart from modifying the  binders , add the neww estimators, etc etc
         eqasimConfig.setEstimator("bike","KBike");
         eqasimConfig.setEstimator("pt","KPT");
@@ -149,54 +145,13 @@ public class CostStructures {
         controller.addOverridingModule( new DiscreteModeChoiceModule());
         controller.addOverridingModule(new EqasimAnalysisModule());
         controller.addOverridingModule(new EqasimModeChoiceModule());
-        controller.addOverridingModule( new ModeChoiceModuleExample(cmd,scenario));
+        controller.addOverridingModule( new SMMBaseModeChoice(cmd,scenario));
         MicromobilityUtils.addSharingServices(cmd,controller,config,scenario);
 
-        ConfigWriter cw=new ConfigWriter(config);
-        cw.write("verificationConfig.xml");
+
         controller.run();
     }
-    public static void runAsSharingRaptor(CommandLine cmd, Integer i){
-        Config config = ConfigUtils.loadConfig("C:\\Users\\juan_\\Desktop\\TUM\\Semester 4\\Matsim\\eqasim-java-develop\\examples\\src\\main\\java\\org\\eqasim\\examples\\corsica_drt\\siouxfalls\\config.xml", new ConfigGroup[0]);
-        config.removeModule("strategy");
-        StrategyConfigGroup stratSettings=new StrategyConfigGroup();
-        config.addModule(stratSettings);
-        config.qsim().setFlowCapFactor(1e9);
-        config.qsim().setStorageCapFactor(1e9);
-        {
-            StrategyConfigGroup.StrategySettings strat=new StrategyConfigGroup.StrategySettings();
-            strat.setStrategyName(DefaultPlanStrategiesModule.DefaultStrategy.SubtourModeChoice);
-            strat.setWeight(0.2);
-            config.strategy().addStrategySettings(strat);
 
-        }
-        {
-            StrategyConfigGroup.StrategySettings strat=new StrategyConfigGroup.StrategySettings();
-            strat.setStrategyName(DefaultPlanStrategiesModule.DefaultSelector.KeepLastSelected);
-            strat.setWeight(0.8);
-            config.strategy().addStrategySettings(strat);
-
-        }
-        config.strategy().setFractionOfIterationsToDisableInnovation(0.9);
-        config.controler().setWriteEventsInterval(1);
-        config.controler().setWritePlansInterval(1);
-        config.controler().setLastIteration(50);
-        String baseDirectory="./ComputationalSRResults/Scenario";
-        String nameScenario=baseDirectory+String.valueOf(i);
-        config.controler().setOutputDirectory(nameScenario);
-        Scenario scenario = ScenarioUtils.loadScenario(config);
-        Controler controller = new Controler(scenario);
-
-        try {
-            SharingRaptorUtils.addSharingServicesCharyParNagel(cmd,controller,config,scenario);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        controller.addOverridingModule(new SwissRailRaptorModule());
-        controller.run();
-        ConfigWriter cw= new ConfigWriter(config);
-        cw.write("CorsicaRaptorConfig.xml");
-    }
     public static String[] parseParams(String file) throws FileNotFoundException {
         File txt = new File(file);
         Scanner scan = new Scanner(txt);
