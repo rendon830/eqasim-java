@@ -31,4 +31,4 @@ The simulation parameters are as following:
 ·	Mode parameters: Defines the parameters for the utility function of the modes such as PT, car, bike, among others The parameter must be a Double and is optional since the SMM includes pre-defined values.
 
 An example of the simulation parameters can be seen as the following:
-![eqasim](https://github.com/rendon830/eqasim-java/blob/Clean/parameters.JPG!parameters)
+![parameters](https://github.com/rendon830/eqasim-java/blob/Clean/parameters.JPG)
