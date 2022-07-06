@@ -30,5 +30,10 @@ The simulation parameters are as following:
 ·	Cost Parameters: Defines the cost in Euro/min for the different modes such as PT, car, bike, among others. The parameter must be a Double and is optional since the SMM includes pre-defined values .
 ·	Mode parameters: Defines the parameters for the utility function of the modes such as PT, car, bike, among others The parameter must be a Double and is optional since the SMM includes pre-defined values.
 
-An example of the simulation parameters can be seen as the following:
+A summary of the simulation parameters can be seen as the following:
 ![parameters](https://github.com/rendon830/eqasim-java/blob/Clean/parameters.JPG)
+
+An example of the simulation arguments as the following:
+![parameters-Ex0](https://github.com/rendon830/eqasim-java/blob/Clean/exampleParam.JPG)
+
+
